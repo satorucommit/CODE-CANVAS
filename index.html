@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeCanvas - Visual Notes & Code Organizer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dark-theme">
+    <div class="background-animation"></div>
+    
+    <!-- Main Application -->
+    <div id="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h1><i class="fas fa-palette"></i> CodeCanvas</h1>
+                <p class="tagline">Visual Code & Notes</p>
+            </div>
+            
+            <nav class="main-nav">
+                <ul>
+                    <li class="nav-item active" data-page="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </li>
+                    <li class="nav-item" data-page="create">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Create New</span>
+                    </li>
+                    <li class="nav-item" data-page="templates">
+                        <i class="fas fa-th-large"></i>
+                        <span>Templates</span>
+                    </li>
+                    <li class="nav-item" data-page="library">
+                        <i class="fas fa-book"></i>
+                        <span>Library</span>
+                    </li>
+                    <li class="nav-item" data-page="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button id="exportBtn" class="sidebar-btn">
+                    <i class="fas fa-file-export"></i>
+                    <span>Export Data</span>
+                </button>
+                <button id="importBtn" class="sidebar-btn">
+                    <i class="fas fa-file-import"></i>
+                    <span>Import Data</span>
+                </button>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <section id="dashboard-page" class="page active">
+                <header class="page-header">
+                    <h1>Dashboard</h1>
+                    <div class="header-actions">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Search items...">
+                        </div>
+                        <button id="addNoteBtn" class="primary-btn">
+                            <i class="fas fa-plus"></i> New Item
+                        </button>
+                    </div>
+                </header>
+                
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-sticky-note"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalItems">0</h3>
+                            <p>Total Items</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="codeItems">0</h3>
+                            <p>Code Snippets</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="noteItems">0</h3>
+                            <p>Notes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="templateTypes">6</h3>
+                            <p>Templates</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recent-items">
+                    <div class="section-header">
+                        <h2>Recent Items</h2>
+                        <button id="viewAllBtn" class="secondary-btn">View All</button>
+                    </div>
+                    <div id="recentItemsContainer" class="items-grid">
+                        <div class="empty-state">
+                            <div class="empty-icon">📋</div>
+                            <h3>No items yet</h3>
+                            <p>Create your first item to get started!</p>
+                            <button id="createFirstBtn" class="primary-btn">
+                                <i class="fas fa-plus"></i> Create First Item
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Create Page -->
+            <section id="create-page" class="page">
+                <header class="page-header">
+                    <h1>Create New Item</h1>
+                    <button id="backToDashboard" class="secondary-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                </header>
+                
+                <div class="creation-wizard">
+                    <div class="wizard-steps">
+                        <div class="step active" data-step="1">
+                            <div class="step-number">1</div>
+                            <div class="step-label">Template</div>
+                        </div>
+                        <div class="step" data-step="2">
+                            <div class="step-number">2</div>
+                            <div class="step-label">Content</div>
+                        </div>
+                        <div class="step" data-step="3">
+                            <div class="step-number">3</div>
+                            <div class="step-label">Style</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 1: Template Selection -->
+                    <div id="step1" class="wizard-step active">
+                        <h2>Choose a Template</h2>
+                        <div class="template-grid">
+                            <div class="template-card active" data-template="classic">
+                                <div class="template-icon">📝</div>
+                                <h3>Classic Note</h3>
+                                <p>Standard note format for general purposes</p>
+                            </div>
+                            <div class="template-card" data-template="checklist">
+                                <div class="template-icon">✅</div>
+                                <h3>Checklist</h3>
+                                <p>Task lists with checkboxes</p>
+                            </div>
+                            <div class="template-card" data-template="timeline">
+                                <div class="template-icon">📅</div>
+                                <h3>Timeline</h3>
+                                <p>Chronological events display</p>
+                            </div>
+                            <div class="template-card" data-template="diagram">
+                                <div class="template-icon">📊</div>
+                                <h3>Diagram</h3>
+                                <p>Visual flow representations</p>
+                            </div>
+                            <div class="template-card" data-template="brainstorm">
+                                <div class="template-icon">💡</div>
+                                <h3>Brainstorm</h3>
+                                <p>Idea mapping and grouping</p>
+                            </div>
+                            <div class="template-card" data-template="code">
+                                <div class="template-icon">💻</div>
+                                <h3>Code Snippet</h3>
+                                <p>Syntax-highlighted code storage</p>
+                            </div>
+                        </div>
+                        <div class="wizard-actions">
+                            <button class="secondary-btn" disabled>
+                                <i class="fas fa-arrow-left"></i> Previous
+                            </button>
+                            <button id="nextToStep2" class="primary-btn">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2: Content Creation -->
+                    <div id="step2" class="wizard-step">
+                        <h2>Create Your Content</h2>
+                        <div class="content-form">
+                            <div class="form-group">
+                                <label for="itemTitle">Title</label>
+                                <input type="text" id="itemTitle" placeholder="Enter a descriptive title...">
+                            </div>
+                            <div class="form-group">
+                                <label for="itemContent">Content</label>
+                                <textarea id="itemContent" placeholder="Enter your content here..."></textarea>
+                            </div>
+                        </div>
+                        <div class="wizard-actions">
+                            <button id="backToStep1" class="secondary-btn">
+                                <i class="fas fa-arrow-left"></i> Previous
+                            </button>
+                            <button id="nextToStep3" class="primary-btn">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3: Style Customization -->
+                    <div id="step3" class="wizard-step">
+                        <h2>Customize Appearance</h2>
+                        <div class="style-options">
+                            <div class="form-group">
+                                <label>Color Theme</label>
+                                <div class="color-palette">
+                                    <div class="color-option active" data-color="blue" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                                    <div class="color-option" data-color="green" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);"></div>
+                                    <div class="color-option" data-color="orange" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                                    <div class="color-option" data-color="purple" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                                    <div class="color-option" data-color="red" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="preview-container">
+                                <h3>Preview</h3>
+                                <div id="itemPreview" class="item-preview">
+                                    <div class="preview-content">
+                                        Your item preview will appear here
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wizard-actions">
+                            <button id="backToStep2" class="secondary-btn">
+                                <i class="fas fa-arrow-left"></i> Previous
+                            </button>
+                            <button id="saveItem" class="primary-btn">
+                                <i class="fas fa-save"></i> Save Item
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Templates Page -->
+            <section id="templates-page" class="page">
+                <header class="page-header">
+                    <h1>Templates</h1>
+                    <button id="backToDashboard2" class="secondary-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                </header>
+                
+                <div class="templates-showcase">
+                    <div class="template-showcase-card" data-template="classic">
+                        <div class="showcase-header">
+                            <div class="template-icon">📝</div>
+                            <h2>Classic Note</h2>
+                        </div>
+                        <div class="showcase-content">
+                            <p>The standard note template for general purpose documentation. Perfect for meeting notes, ideas, and general information storage.</p>
+                            <div class="template-preview">
+                                <div class="preview-item classic-preview">
+                                    <div class="preview-title">Project Meeting Notes</div>
+                                    <div class="preview-text">Discussed project timeline and deliverables. Key points:...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="template-showcase-card" data-template="checklist">
+                        <div class="showcase-header">
+                            <div class="template-icon">✅</div>
+                            <h2>Checklist</h2>
+                        </div>
+                        <div class="showcase-content">
+                            <p>Task-oriented template with checkboxes for tracking progress. Ideal for to-do lists, project milestones, and step-by-step procedures.</p>
+                            <div class="template-preview">
+                                <div class="preview-item checklist-preview">
+                                    <div class="checklist-item"><i class="far fa-square"></i> Design wireframes</div>
+                                    <div class="checklist-item"><i class="far fa-check-square"></i> Develop prototype</div>
+                                    <div class="checklist-item"><i class="far fa-square"></i> User testing</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="template-showcase-card" data-template="timeline">
+                        <div class="showcase-header">
+                            <div class="template-icon">📅</div>
+                            <h2>Timeline</h2>
+                        </div>
+                        <div class="showcase-content">
+                            <p>Chronological display of events or milestones. Great for project planning, historical events, and process documentation.</p>
+                            <div class="template-preview">
+                                <div class="preview-item timeline-preview">
+                                    <div class="timeline-event">Project Kickoff</div>
+                                    <div class="timeline-event">Design Phase</div>
+                                    <div class="timeline-event">Development</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="template-showcase-card" data-template="diagram">
+                        <div class="showcase-header">
+                            <div class="template-icon">📊</div>
+                            <h2>Diagram</h2>
+                        </div>
+                        <div class="showcase-content">
+                            <p>Visual representation template for flowcharts, mind maps, and process diagrams. Perfect for visual learners and complex concepts.</p>
+                            <div class="template-preview">
+                                <div class="preview-item diagram-preview">
+                                    <div class="diagram-box">User Input</div>
+                                    <div class="diagram-arrow">↓</div>
+                                    <div class="diagram-box">Processing</div>
+                                    <div class="diagram-arrow">↓</div>
+                                    <div class="diagram-box">Output</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="template-showcase-card" data-template="brainstorm">
+                        <div class="showcase-header">
+                            <div class="template-icon">💡</div>
+                            <h2>Brainstorm</h2>
+                        </div>
+                        <div class="showcase-content">
+                            <p>Creative thinking template for idea generation and grouping. Excellent for brainstorming sessions and concept development.</p>
+                            <div class="template-preview">
+                                <div class="preview-item brainstorm-preview">
+                                    <div class="brainstorm-item">Mobile App</div>
+                                    <div class="brainstorm-item">Web Platform</div>
+                                    <div class="brainstorm-item">API Service</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="template-showcase-card" data-template="code">
+                        <div class="showcase-header">
+                            <div class="template-icon">💻</div>
+                            <h2>Code Snippet</h2>
+                        </div>
+                        <div class="showcase-content">
+                            <p>Syntax-highlighted code storage with language support. Ideal for developers to save and organize code examples.</p>
+                            <div class="template-preview">
+                                <div class="preview-item code-preview">
+                                    <div class="code-line">function hello() {</div>
+                                    <div class="code-line">&nbsp;&nbsp;console.log("Hello World");</div>
+                                    <div class="code-line">}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Library Page -->
+            <section id="library-page" class="page">
+                <header class="page-header">
+                    <h1>Library</h1>
+                    <div class="header-actions">
+                        <div class="filter-options">
+                            <select id="filterByType">
+                                <option value="all">All Types</option>
+                                <option value="classic">Classic Notes</option>
+                                <option value="checklist">Checklists</option>
+                                <option value="timeline">Timelines</option>
+                                <option value="diagram">Diagrams</option>
+                                <option value="brainstorm">Brainstorms</option>
+                                <option value="code">Code Snippets</option>
+                            </select>
+                            <select id="sortBy">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="title">Title A-Z</option>
+                            </select>
+                        </div>
+                        <button id="backToDashboard3" class="secondary-btn">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                    </div>
+                </header>
+                
+                <div id="libraryItemsContainer" class="items-grid">
+                    <div class="empty-state">
+                        <div class="empty-icon">📚</div>
+                        <h3>Your library is empty</h3>
+                        <p>Create items to populate your library!</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Settings Page -->
+            <section id="settings-page" class="page">
+                <header class="page-header">
+                    <h1>Settings</h1>
+                    <button id="backToDashboard4" class="secondary-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                </header>
+                
+                <div class="settings-container">
+                    <div class="settings-section">
+                        <h2>Appearance</h2>
+                        <div class="setting-item">
+                            <label>Theme</label>
+                            <select id="themeSelector">
+                                <option value="light">Light</option>
+                                <option value="dark" selected>Dark</option>
+                            </select>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>Animations</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="animationsToggle" checked>
+                                <label for="animationsToggle" class="toggle-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h2>Data Management</h2>
+                        <div class="setting-item">
+                            <label>Auto-save Interval</label>
+                            <select id="autosaveInterval">
+                                <option value="0">Manual Only</option>
+                                <option value="30">30 Seconds</option>
+                                <option value="60" selected>1 Minute</option>
+                                <option value="300">5 Minutes</option>
+                            </select>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>Storage Location</label>
+                            <div class="storage-info">
+                                <span>Local Storage</span>
+                                <span class="storage-size">0 KB used</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h2>Actions</h2>
+                        <div class="setting-actions">
+                            <button id="exportDataBtn" class="action-btn">
+                                <i class="fas fa-file-export"></i> Export All Data
+                            </button>
+                            <button id="importDataBtn" class="action-btn">
+                                <i class="fas fa-file-import"></i> Import Data
+                            </button>
+                            <button id="clearDataBtn" class="action-btn danger">
+                                <i class="fas fa-trash-alt"></i> Clear All Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Slide-in Panels -->
+        <!-- Notes Panel -->
+        <div id="notesPanel" class="slide-panel notes-panel">
+            <div class="panel-header">
+                <h2>Notes Templates</h2>
+                <button class="close-panel" id="closeNotesPanel">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="panel-content">
+                <div class="panel-actions">
+                    <button class="panel-btn primary-btn" id="newNoteBtn">
+                        <i class="fas fa-plus"></i> New Note
+                    </button>
+                </div>
+                <div class="templates-list" id="notesTemplatesList">
+                    <!-- Notes templates will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Codes Panel -->
+        <div id="codesPanel" class="slide-panel codes-panel">
+            <div class="panel-header">
+                <h2>Code Templates</h2>
+                <button class="close-panel" id="closeCodesPanel">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="panel-content">
+                <div class="panel-actions">
+                    <button class="panel-btn primary-btn" id="newCodeBtn">
+                        <i class="fas fa-plus"></i> New Code
+                    </button>
+                </div>
+                <div class="templates-list" id="codesTemplatesList">
+                    <!-- Code templates will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating Action Buttons -->
+        <div class="floating-actions">
+            <button class="fab-btn" id="openNotesBtn">
+                <i class="fas fa-sticky-note"></i>
+                <span class="fab-label">Notes</span>
+            </button>
+            <button class="fab-btn" id="openCodesBtn">
+                <i class="fas fa-code"></i>
+                <span class="fab-label">Codes</span>
+            </button>
+        </div>
+    </div>
+    
+    <input type="file" id="fileInput" accept=".json" style="display: none;">
+    
+    <script src="script.js"></script>
+</body>
+</html>
